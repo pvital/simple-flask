@@ -1,4 +1,4 @@
-FROM python:3.12-slim-bookworm
+FROM public.ecr.aws/docker/library/python:3.12.4-slim-bookworm
 
 LABEL org.opencontainers.image.source=https://github.com/pvital/simple-flask
 LABEL org.opencontainers.image.description="Simple Flask container"
@@ -9,6 +9,11 @@ ENV PYTHONDONTWRITEBYTECODE 1
 
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update \
+    && apt-get install -y curl procps \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install pip requirements
 ADD requirements.txt .
@@ -21,7 +26,10 @@ WORKDIR /app
 # Creates a non-root user and adds permission to access the /app folder
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
-EXPOSE 5000
+EXPOSE 8080
+
+ENV INSTANA_DEBUG=True
+ENV INSTANA_SERVICE_NAME=simple-flask-pvital
 
 # Run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+CMD ["python", "app.py"]
