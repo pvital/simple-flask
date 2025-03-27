@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/python:3.12.9-slim-bookworm
+FROM public.ecr.aws/docker/library/python:3.12.4-slim-bookworm
 
 LABEL org.opencontainers.image.source=https://github.com/pvital/simple-flask
 LABEL org.opencontainers.image.description="Simple Flask container"
