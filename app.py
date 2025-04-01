@@ -1,3 +1,5 @@
+import sys
+
 import requests
 from flask import Flask
 
@@ -6,7 +8,7 @@ app = Flask(__name__)
 
 @app.get("/")
 def hello():
-    return {"message": "Hello from Instana (profiling) World"}
+    return {"message": f"Hello from Instana World - Python {sys.version}"}
 
 
 @app.route("/users/")

@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/python:3.12.4-slim-bookworm
+FROM public.ecr.aws/docker/library/python:3.9.21-slim-bookworm
 
 LABEL org.opencontainers.image.source=https://github.com/pvital/simple-flask
 LABEL org.opencontainers.image.description="Simple Flask container"
@@ -11,7 +11,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update \
-    && apt-get install -y curl procps \
+    && apt-get install -y curl procps build-essential python3-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -32,4 +32,5 @@ ENV INSTANA_DEBUG=True
 ENV INSTANA_SERVICE_NAME=simple-flask-pvital
 
 # Run the application
-CMD ["python", "app.py"]
+# CMD ["python", "app.py"]
+CMD ["uwsgi", "--enable-threads", "--http", "0.0.0.0:8080", "--master", "-p", "5", "-w", "app:app"]
